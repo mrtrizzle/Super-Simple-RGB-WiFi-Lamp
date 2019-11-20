@@ -75,6 +75,10 @@
                 // console.log("Found Circle Message")
                 handleCircleMessage(jsonMessage["Circle"])
             }
+            if ("Gradient" in jsonMessage) {
+                // console.log("Found Circle Message")
+                handleGradientMessage(jsonMessage["Gradient"])
+            }
             if ("Sparkle" in jsonMessage) {
                 // console.log("Found Sparkle Message")
                 handleSparkleMessage(jsonMessage["Sparkle"])
@@ -270,6 +274,10 @@
             if (typeof jsonMessage === "object") {
 
             }
+        }
+
+        function handleGradientMessage(jsonMessage) {
+            // TODO Implement!
         }
 
         function handleSparkleMessage(jsonMessage) {
@@ -468,6 +476,9 @@
                     <li id="nightRiderTabNavItem" class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#NightRider">Night Rider</a>
                     </li>
+                    <li id="gradient" class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#Gradient">Gradient</a>
+                    </li>
                     <li id="sparkleTabNavItem" class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#Sparkle">Sparkle</a>
                     </li>
@@ -502,6 +513,9 @@
                     });
                     $("#nightRiderTabNavItem").click(function () {
                         sendMessage({ "Mode": "Night Rider" })
+                    });
+                    $("#gradientTabNavItem").click(function () {
+                        sendMessage({ "Mode": "Gradient" })
                     });
                     $("#sparkleTabNavItem").click(function () {
                         sendMessage({ "Mode": "Sparkle" })
@@ -598,6 +612,8 @@
             <button id="circleButton" type="submit" class="col mb-2 mx-2 btn btn-lg btn-outline-light">Circle</button>
             <button id="nightRiderButton" type="submit" class="col mb-2 mx-2 btn btn-lg btn-outline-light">Night
                 Rider</button>
+            <button id="gradientButton" type="submit"
+                class="col mb-2 mx-2 btn btn-lg btn-outline-light">Gradient</button>
             <button id="sparkleButton" type="submit" class="col mb-2 mx-2 btn btn-lg btn-outline-light">Sparkle</button>
             <button id="colorWipeButton" type="submit" class="col mb-2 mx-2 btn btn-lg btn-outline-light">Color
                 Wipe</button>
@@ -634,6 +650,10 @@
                 $("#nightRiderButton").click(function () {
                     $('#navbarHeader a[href="#NightRider"]').tab('show')
                     sendMessage({ "Mode": "Night Rider" })
+                });
+                $("#gradientButton").click(function () {
+                    $('#navbarHeader a[href="#Gradient"]').tab('show')
+                    sendMessage({ "Mode": "Gradient" })
                 });
                 $("#sparkleButton").click(function () {
                     $('#navbarHeader a[href="#Sparkle"]').tab('show')
@@ -1086,6 +1106,170 @@
             <p>Knight Rider. A shadowy flight into the dangerous world of a man who does not exist.
                 Michael Knight: a young loner on a crusade to champion the cause of the innocent,
                 the helpless, the powerless, in a world of criminals who operate above the law.</p>
+        </div>
+        <div id="Gradient" class="container pb-5 tab-pane fade">
+            <h2>Gradient Mode</h2>
+            <p>
+                <!-- TODO: Gradient Webpage-->
+                Here follows the UI to control the gradient generation.
+            </p>
+
+            <h3>Pick your own gradient!</h3>
+            <div class="row my-3">
+                <input id="gradientSelectButton1" class="color col mb-2 mx-2 btn btn-lg btn-outline-light"
+                    value="rgb(0,0,0)">
+                <input id="gradientSelectButton2" class="color col mb-2 mx-2 btn btn-lg btn-outline-light"
+                    value="rgb(0,0,0)">
+                <input id="gradientSelectButton3" class="color col mb-2 mx-2 btn btn-lg btn-outline-light"
+                    value="rgb(0,0,0)">
+            </div>
+            <div id="gradientShow" class="row my-3" style="background: linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1), rgba(255, 255, 0, 1)); height: 100px;">
+            </div>
+
+            <h3>Preset gradients:</h3>
+            <div class="row my-3">
+                <button id="gradPrevButton" class="col mb-2 mx-2 btn btn-lg btn-outline-light" onclick="gradPreset(1);">&larr; Previous Preset</button>
+                <button id="gradNextButton" class="col mb-2 mx-2 btn btn-lg btn-outline-light" onclick="gradPreset(-1);">Next Preset &rarr;</button>
+            </div>
+
+            <script>
+                function gradPreset(inc) {
+                    msg = {
+                        "State": true,
+                        "Mode": "Gradient",
+                        "Gradient": {
+                            "PresetChange": inc
+                        }
+                    }
+                    sendMessage(msg);
+                }
+
+                var bellRed = 0
+                var bellGreen = 0
+                var bellBlue = 0
+                gradDebounce = Date.now();
+                var gradColors = [[0,0,0], [0,0,0], [0,0,0]];
+
+                $('#gradientSelectButton1').colorPicker({
+                    customBG: '#222',
+                    margin: '4px -2px 0',
+                    doRender: 'div div',
+                    preventFocus: true,
+                    animationSpeed: 150,
+                    forceAlpha: false,
+
+                    // demo on how to make plugins... mobile support plugin
+                    buildCallback: function ($elm) {
+                        this.$colorPatch = $elm.prepend('<div class="cp-disp">').find('.cp-disp');
+                    },
+                    cssAddon:
+                        '.cp-disp {padding:2px; margin-bottom:6px; font-size:10px; height:20px; line-height:20px}' +
+                        '.cp-xy-slider {width:200px; height:200px;}' +
+                        '.cp-xy-cursor {width:16px; height:16px; border-width:2px; margin:-8px}' +
+                        '.cp-z-slider {height:200px; width:40px;}' +
+                        '.cp-z-cursor {border-width:8px; margin-top:-8px;}' +
+                        '.cp-alpha {height:40px;}' +
+                        '.cp-alpha-cursor {border-width:8px; margin-left:-8px;}',
+
+                    renderCallback: function ($elm, toggled) {
+                        var colors = this.color.colors;
+                        gradColors[0] = [Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255)];
+                        onGradientEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255));
+                        
+
+
+                        this.$colorPatch.css({
+                            backgroundColor: '#' + colors.HEX,
+                            color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
+                        }).text(this.color.toString($elm._colorMode)); // $elm.val();
+                    }
+                })
+
+                $('#gradientSelectButton2').colorPicker({
+                    customBG: '#222',
+                    margin: '4px -2px 0',
+                    doRender: 'div div',
+                    preventFocus: true,
+                    animationSpeed: 150,
+                    forceAlpha: false,
+
+                    // demo on how to make plugins... mobile support plugin
+                    buildCallback: function ($elm) {
+                        this.$colorPatch = $elm.prepend('<div class="cp-disp">').find('.cp-disp');
+                    },
+                    cssAddon:
+                        '.cp-disp {padding:2px; margin-bottom:6px; font-size:10px; height:20px; line-height:20px}' +
+                        '.cp-xy-slider {width:200px; height:200px;}' +
+                        '.cp-xy-cursor {width:16px; height:16px; border-width:2px; margin:-8px}' +
+                        '.cp-z-slider {height:200px; width:40px;}' +
+                        '.cp-z-cursor {border-width:8px; margin-top:-8px;}' +
+                        '.cp-alpha {height:40px;}' +
+                        '.cp-alpha-cursor {border-width:8px; margin-left:-8px;}',
+
+                    renderCallback: function ($elm, toggled) {
+                        var colors = this.color.colors;
+                        gradColors[1] = [Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255)];
+                        onGradientEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
+                        
+
+                        this.$colorPatch.css({
+                            backgroundColor: '#' + colors.HEX,
+                            color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
+                        }).text(this.color.toString($elm._colorMode)); // $elm.val();
+                    }
+                })
+
+                $('#gradientSelectButton3').colorPicker({
+                    customBG: '#222',
+                    margin: '4px -2px 0',
+                    doRender: 'div div',
+                    preventFocus: true,
+                    animationSpeed: 150,
+                    forceAlpha: false,
+
+                    // demo on how to make plugins... mobile support plugin
+                    buildCallback: function ($elm) {
+                        this.$colorPatch = $elm.prepend('<div class="cp-disp">').find('.cp-disp');
+                    },
+                    cssAddon:
+                        '.cp-disp {padding:2px; margin-bottom:6px; font-size:10px; height:20px; line-height:20px}' +
+                        '.cp-xy-slider {width:200px; height:200px;}' +
+                        '.cp-xy-cursor {width:16px; height:16px; border-width:2px; margin:-8px}' +
+                        '.cp-z-slider {height:200px; width:40px;}' +
+                        '.cp-z-cursor {border-width:8px; margin-top:-8px;}' +
+                        '.cp-alpha {height:40px;}' +
+                        '.cp-alpha-cursor {border-width:8px; margin-left:-8px;}',
+
+                    renderCallback: function ($elm, toggled) {
+                        var colors = this.color.colors;
+                        gradColors[2] = [Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255)];
+                        onGradientEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
+                        
+                        this.$colorPatch.css({
+                            backgroundColor: '#' + colors.HEX,
+                            color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
+                        }).text(this.color.toString($elm._colorMode)); // $elm.val();
+                    }
+                })
+
+                function onGradientEvent(red, green, blue) {
+                    $("#gradientShow").css({"background": `linear-gradient(to right, rgba(${gradColors[0][0]},${gradColors[0][1]},${gradColors[0][2]},1), 
+                    rgba(${gradColors[1][0]},${gradColors[1][1]},${gradColors[1][2]},1), rgba(${gradColors[2][0]}, ${gradColors[2][1]}, ${gradColors[2][2]}, 1))`});
+
+                    msg = {
+                        "State": true,
+                        "Mode": "Gradient",
+                        "Gradient": {
+                            "Colors": gradColors
+                        }
+                    }
+
+                    if (Date.now() - gradDebounce > 50) {
+                        gradDebounce = Date.now()
+                        sendMessage(msg)
+                    }
+                }
+            </script>
         </div>
         <div id="Sparkle" class="container pb-5 tab-pane fade">
             <h2>Sparkle Mode</h2>
