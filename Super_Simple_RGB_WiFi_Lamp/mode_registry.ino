@@ -14,6 +14,6 @@ void ledModeInit() {
   modes["Sparkle"] = new ModeSparkle();
   modes["Color Wipe"] = new ModeColorWipe();
   modes["Confetti"] = new ModeConfetti();
+  modes["Gradient"] = new ModeGradient();
   modes["Visualiser"] = new ModeVisualiser();
 }
-
