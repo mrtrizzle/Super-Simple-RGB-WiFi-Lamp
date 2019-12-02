@@ -155,7 +155,7 @@
                     }
                 }
 
-                // onColourButtonEvent(newRed, newGreen, newBlue)
+                setPickerColor(colourSelectButton, newRed, newGreen, newBlue);
             }
         }
 
@@ -206,7 +206,7 @@
                             }
                         }
 
-                        // onHourPickerEvent(newRed, newGreen, newBlue)
+                        setPickerColor(clockHourColourButton, newRed, newGreen, newBlue);
                     }
                 }
 
@@ -232,7 +232,7 @@
                             }
                         }
 
-                        // onMinPickerEvent(newRed, newGreen, newBlue)
+                        setPickerColor(clockMinuteColourButton, newRed, newGreen, newBlue);
                     }
                 }
             }
@@ -260,7 +260,7 @@
                     }
                 }
 
-                // onOnBellCurvePickerEvent(newRed, newGreen, newBlue)
+                setPickerColor(bellCurveSelectButton, newRed, newGreen, newBlue);
             }
         }
 
@@ -301,6 +301,7 @@
                         newBlue = jsonMessage.Blue
                     }
                 }
+                setPickerColor(sparkleSelectButton, newRed, newGreen, newBlue);
             }
         }
 
@@ -325,6 +326,7 @@
                         newBlue = jsonMessage.Blue
                     }
                 }
+                setPickerColor(colorWipeSelectButton, newRed, newGreen, newBlue);
             }
         }
 
@@ -349,6 +351,7 @@
                         newBlue = jsonMessage.Blue
                     }
                 }
+                setPickerColor(confettiSelectButton, newRed, newGreen, newBlue);
             }
         }
 
@@ -441,7 +444,17 @@
             } else {
                 console.warn("Websockets are closed")
             }
-        }       
+        }
+
+        function setPickerColor(picker, r, g, b) {
+            var rgb_color = 'rgb(' + r + ', ' + g + ', ' + b + ')';
+            picker.val(rgb_color);
+            picker.colorPicker.color.setColor(rgb_color);
+            picker.css({
+                backgroundColor: rgb_color,
+                color: picker.colorPicker.color.colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
+            }).text(rgb_color);
+        }
     </script>
 
 </head>
@@ -545,7 +558,7 @@
             <h1>Mode: <span id="currentModeLabel"></span></h1>
             <div class="col mb-4">
                 <label for="fadeTime">Fade Time: <span id="fadeTimeLabel">200</span> milliseconds</label>
-                <input id="fadeTime" type="range" min="0" max="2000" step="100" value="200" class="form-control-range">
+                <input id="fadeTime" type="range" min="0" max="2000" step="100" value="200" class="form-control-range custom-range">
             </div>
             <button id="stateButton" type="submit" class="col mb-2 mx-2 btn btn-lg btn-outline-light" value="OFF">Turn
                 ON</button>
@@ -706,7 +719,7 @@
                 var currentBlue = 0;
                 var colourDebunce = Date.now()
 
-                $('#colourSelectButton').colorPicker({
+                var colourSelectButton = $('#colourSelectButton').colorPicker({
                     customBG: '#222',
                     margin: '4px -2px 0',
                     doRender: 'div div',
@@ -729,6 +742,7 @@
                     renderCallback: function ($elm, toggled) {
                         var colors = this.color.colors;
                         onColourButtonEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
+                        setPickerColor(colourSelectButton, Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
                     }
                 })
                 $("#redButton").click(function () {
@@ -789,16 +803,16 @@
                 brightness of the light</p>
             <div>
                 <label for="rainbowHue">Start Hue: <span id="rainbowHueLabel">0</span> Degrees</label>
-                <input id="rainbowHue" type="range" min="0" max="359" step="1" value="0" class="form-control-range">
+                <input id="rainbowHue" type="range" min="0" max="359" step="1" value="0" class="form-control-range custom-range">
             </div>
             <div>
                 <label for="rainbowBrightness">Rainbow Brightness: <span id="rainbowBrightnessLabel">100</span>%</label>
                 <input id="rainbowBrightness" type="range" min="0" max="100" step="1" value="100"
-                    class="form-control-range">
+                    class="form-control-range custom-range">
             </div>
             <div>
                 <label for="rainbowSpeed">Rainbow Speed: <span id="rainbowSpeedLabel">10</span> seconds</label>
-                <input id="rainbowSpeed" type="range" min="0" max="10" step="1" value="10" class="form-control-range">
+                <input id="rainbowSpeed" type="range" min="0" max="10" step="1" value="10" class="form-control-range custom-range">
             </div>
             <script>
                 var rainbowDebunce = Date.now()
@@ -899,7 +913,7 @@
                 var currentMinGreen = 0
                 var currentMinBlue = 0
 
-                $('#clockHourColourButton').colorPicker({
+                var clockHourColourButton = $('#clockHourColourButton').colorPicker({
                     customBG: '#222',
                     margin: '4px -2px 0',
                     doRender: 'div div',
@@ -923,14 +937,10 @@
                     renderCallback: function ($elm, toggled) {
                         var colors = this.color.colors;
                         onHourPickerEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
-
-                        this.$colorPatch.css({
-                            backgroundColor: '#' + colors.HEX,
-                            color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
-                        }).text(this.color.toString($elm._colorMode)); // $elm.val();
+                        setPickerColor(clockHourColourButton, Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
                     }
                 })
-                $('#clockMinuteColourButton').colorPicker({
+                var clockMinuteColourButton = $('#clockMinuteColourButton').colorPicker({
                     customBG: '#222',
                     margin: '4px -2px 0',
                     doRender: 'div div',
@@ -954,11 +964,7 @@
                     renderCallback: function ($elm, toggled) {
                         var colors = this.color.colors;
                         onMinPickerEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
-
-                        this.$colorPatch.css({
-                            backgroundColor: '#' + colors.HEX,
-                            color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
-                        }).text(this.color.toString($elm._colorMode)); // $elm.val();
+                        setPickerColor(clockMinuteColourButton, Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
                     }
                 })
 
@@ -1044,7 +1050,7 @@
                 var bellGreen = 0
                 var bellBlue = 0
 
-                $('#bellCurveSelectButton').colorPicker({
+                var bellCurveSelectButton = $('#bellCurveSelectButton').colorPicker({
                     customBG: '#222',
                     margin: '4px -2px 0',
                     doRender: 'div div',
@@ -1068,11 +1074,7 @@
                     renderCallback: function ($elm, toggled) {
                         var colors = this.color.colors;
                         onOnBellCurvePickerEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
-
-                        this.$colorPatch.css({
-                            backgroundColor: '#' + colors.HEX,
-                            color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
-                        }).text(this.color.toString($elm._colorMode)); // $elm.val();
+                        setPickerColor(bellCurveSelectButton, Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
                     }
                 })
 
@@ -1278,12 +1280,6 @@
                 <input id="sparkleSelectButton" class="color col mb-2 mx-2 btn btn-lg btn-outline-light"
                     value="rgb(0,0,0)"></input>
             </div>
-            <!--
-              <div>
-                  <label for="sparkleSpeed">Sparkle Speed: <span id="sparkleSpeedLabel">5</span> seconds</label>
-                  <input id="sparkleSpeed" type="range" min="0" max="10" step="1" value="5" class="form-control-range">
-              </div>
-            -->
             <script>
                 var sparkleLastMessage = ""
                 $("#sparkleSpeed").on("input", function () {
@@ -1297,7 +1293,7 @@
                 var sparkleBlue = 0;
                 var sparkleDebunce = Date.now()
 
-                $('#sparkleSelectButton').colorPicker({
+                var sparkleSelectButton = $('#sparkleSelectButton').colorPicker({
                     customBG: '#222',
                     margin: '4px -2px 0',
                     doRender: 'div div',
@@ -1320,6 +1316,7 @@
                     renderCallback: function ($elm, toggled) {
                         var colors = this.color.colors;
                         onSparkleButtonEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
+                        setPickerColor(sparkleSelectButton, Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
                     }
                 })
 
@@ -1386,7 +1383,7 @@
                 var colorWipeBlue = 0
                 var colorWipeDebunce = Date.now()
 
-                $('#colorWipeSelectButton').colorPicker({
+                var colorWipeSelectButton = $('#colorWipeSelectButton').colorPicker({
                     customBG: '#222',
                     margin: '4px -2px 0',
                     doRender: 'div div',
@@ -1411,10 +1408,7 @@
                         var colors = this.color.colors;
                         onColorWipeButtonEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
 
-                        this.$colorPatch.css({
-                            backgroundColor: '#' + colors.HEX,
-                            color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
-                        }).text(this.color.toString($elm._colorMode)); // $elm.val();
+                        setPickerColor(colorWipeSelectButton, Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
                     }
                 })
 
@@ -1451,15 +1445,6 @@
         <div id="Confetti" class="container pb-5 tab-pane fade">
             <h2>Confetti Mode</h2>
             <p>Confetti will flash random colors to emulate confetti.</p>
-            <!-- 
-            <div class="row my-3">
-                  <input id="confettiSelectButton" class="color col mb-2 mx-2 btn btn-lg btn-outline-light" value="rgb(0,0,0)"></input>
-              </div>
-              <div>
-                  <label for="confettiSpeed">Confetti Speed: <span id="confettiSpeedLabel">5</span></label>
-                  <input id="confettiSpeed" type="range" min="0" max="10" step="1" value="5" class="form-control-range">
-              </div>
-              -->
             <script>
                 var confettiLastMessage = ""
                 var confettiRed = 0;
@@ -1467,7 +1452,7 @@
                 var confettiBlue = 0;
                 var confettiDebunce = Date.now()
 
-                $('#confettiSelectButton').colorPicker({
+                var confettiSelectButton = $('#confettiSelectButton').colorPicker({
                     customBG: '#222',
                     margin: '4px -2px 0',
                     doRender: 'div div',
@@ -1490,6 +1475,7 @@
                     renderCallback: function ($elm, toggled) {
                         var colors = this.color.colors;
                         onConfettiButtonEvent(Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
+                        setPickerColor(confettiSelectButton, Math.round(colors.rgb.r * 255), Math.round(colors.rgb.g * 255), Math.round(colors.rgb.b * 255))
                     }
                 })
 
@@ -1553,36 +1539,36 @@
                 <label for="visualiserPeriod"><b>Frequency Range</b>: <span
                         id="visualiserPeriodLabel">2000</span>Hz</label>
                 <input id="visualiserPeriod" type="range" min="100" max="2000" step="50" value="250"
-                    class="form-control-range">
+                    class="form-control-range custom-range">
             </div>
             <div>
                 <label for="visualiserMinThreshold"><b>Minimum Threshold</b>: <span
                         id="visualiserMinThresholdLabel">100</span></label>
                 <input id="visualiserMinThreshold" type="range" min="0" max="300" step="10" value="100"
-                    class="form-control-range">
+                    class="form-control-range custom-range">
             </div>
             <div>
                 <label for="visualiserMaxThreshold"><b>Maximum Threshold</b>: <span
                         id="visualiserMaxThresholdLabel">750</span></label>
                 <input id="visualiserMaxThreshold" type="range" min="400" max="3000" step="50" value="750"
-                    class="form-control-range">
+                    class="form-control-range custom-range">
             </div>
             <div>
                 <label for="visualiserFadeUp"><b>Fade Up Delay</b>: <span id="visualiserFadeUpLabel">32</span></label>
                 <input id="visualiserFadeUp" type="range" min="0" max="255" step="1" value="32"
-                    class="form-control-range">
+                    class="form-control-range custom-range">
             </div>
             <div>
                 <label for="visualiserFadeDown"><b>Fade Down Delay</b>: <span
                         id="visualiserFadeDownLabel">32</span></label>
                 <input id="visualiserFadeDown" type="range" min="0" max="255" step="1" value="32"
-                    class="form-control-range">
+                    class="form-control-range custom-range">
             </div>
             <div>
                 <label for="visualiserHueOffset"><b>Hue Offset</b>: <span
                         id="visualiserHueOffsetLabel">170</span></label>
                 <input id="visualiserHueOffset" type="range" min="0" max="359" step="1" value="170"
-                    class="form-control-range">
+                    class="form-control-range custom-range">
             </div>
             <h6 class="pt-4">Variable Description</h6>
             <ul>

@@ -1,6 +1,14 @@
 # Super Simple RGB WiFi Lamp
 [![Super Simple RGB WiFi Lamp](http://img.youtube.com/vi/WLXLV6ASLJM/0.jpg)](https://www.youtube.com/watch?v=WLXLV6ASLJM)
- 
+
+## A Big Thank You to Our Contributors
+A special thank you to those who have contributed to this project! Without you it would not what it is now.
+- [StefaanVanDooren](https://github.com/StefaanVanDooren)
+- [LarsMichelsen](https://github.com/LarsMichelsen)
+- [Phantisy](https://github.com/Phantisy) 
+- [mrtrizzle](https://github.com/mrtrizzle) 
+- [mdonath](https://github.com/mdonath) 
+
 ## Getting started
 This is the GitHub repo to support my Instructables publish. Be sure to head over there to [see how to build and wire it](https://www.instructables.com/id/Super-Simple-RGB-WiFi-Lamp/)!
 
@@ -13,7 +21,7 @@ Since this project uses the ESP8266 as the microcontroller, the board needs to b
 #### Installing Libraries
 The code to run the lights was built to be as simple as possible for users to set up their device and get it up and running. This comes at the expense of the code being a little more complex to get some of the features I wanted. To speed up development I used a couple of absolutely amazing additional libraries which include;
 - [ArduinoJson](https://arduinojson.org/) for messaging in JSON. 
-- [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)] for the base layer of the WebSocket's 
+- [ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP) for the base layer of the WebSocket's 
 - [ESPAsyncUDP](https://github.com/me-no-dev/ESPAsyncUDP) for collecting the time from an NTP via UDP
 - [FastLED](https://github.com/FastLED/FastLED) for controlling the LED's
 - [Timelib](https://github.com/PaulStoffregen/Time) for keeping track of the current time
